@@ -8,6 +8,26 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import SQLite from 'react-native-sqlite-storage';
+
+function errorCB(err){
+    console.log('SQL Error: ' + err);
+};
+
+function successCB(err){
+    console.log('SQL executed fine');
+};
+
+function openCB(err){
+    console.log('Database OPENED');
+};
+
+const db = SQLite.openDatabase({name : "testDB", createFromLocation : 1}, openCB, errorCB);
+db.transaction((tx) => {
+    tx.executeSql('SELECT * from list;', [], (tx, results) => {
+        console.log(results);
+    });
+});
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
