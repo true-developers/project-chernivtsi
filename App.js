@@ -22,12 +22,7 @@ function openCB(err){
     console.log('Database OPENED');
 };
 
-const db = SQLite.openDatabase({name : "testDB", createFromLocation : 1}, openCB, errorCB);
-db.transaction((tx) => {
-    tx.executeSql('SELECT * from list;', [], (tx, results) => {
-        console.log(results);
-    });
-});
+
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -38,10 +33,23 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+
+  constructor() {
+    super();
+    console.log(11);
+    const db = SQLite.openDatabase({name : "testDB.sqlite", createFromLocation : "~www/testDB.sqlite"}, openCB, errorCB);
+    db.transaction((tx) => {
+      tx.executeSql('SELECT * FROM list;', [], (tx, results) => {
+      console.log(results);
+      });
+    });
+  }
   render() {
+
+
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
+        <Text style={styles.welcome}>Welcome to React Native!!</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
       </View>
