@@ -8,21 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import SQLite from 'react-native-sqlite-storage';
-
-function errorCB(err){
-    console.log('SQL Error: ' + err);
-};
-
-function successCB(err){
-    console.log('SQL executed fine');
-};
-
-function openCB(err){
-    console.log('Database OPENED');
-};
-
-
+import Db from './src/db';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -34,27 +20,24 @@ const instructions = Platform.select({
 type Props = {};
 export default class App extends Component<Props> {
 
-  constructor() {
-    super();
-    console.log(11);
-    const db = SQLite.openDatabase({name : "testDB.sqlite", createFromLocation : "~www/testDB.sqlite"}, openCB, errorCB);
-    db.transaction((tx) => {
-      tx.executeSql('SELECT * FROM list;', [], (tx, results) => {
-      console.log(results);
-      });
-    });
-  }
-  render() {
+    constructor() {
+        super();
+    }
 
+    async componentDidMount(){
+        const res = await Db.execute('select * from list');
+        console.log('res!!!!!!!! =>>>>>>>>', res);
+    }
 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.welcome}>Welcome to React Native!!</Text>
+                <Text style={styles.instructions}>To get started, edit App.js</Text>
+                <Text style={styles.instructions}>{instructions}</Text>
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
